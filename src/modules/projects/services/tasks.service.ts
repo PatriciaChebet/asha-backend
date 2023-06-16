@@ -3,8 +3,9 @@ import { CreateTaskDto } from "../dto/create-task.dto";
 import { TasksRepository } from "../repositories/tasks.repository";
 import { Task } from "../entities/tasks.entity";
 import { Project } from "../entities/projects.entity";
-import { User } from "src/modules/users/entities/user.entity";
-import { UsersService } from "src/modules/users/services/users.services";
+import { User } from "../../users/entities/user.entity";
+import { UsersService } from "../../users/services/users.services";
+import { UpdateTaskDto } from "../dto/update-task.dto";
 
 @Injectable()
 export class TasksService {
@@ -17,7 +18,9 @@ export class TasksService {
         .leftJoinAndSelect("task.owners", "owners")
         .leftJoinAndSelect("task.accountable", "accountable")
         .leftJoinAndSelect("task.subscribers", "subscribers")
-        .select(['task.id', 'task.name', 'task.stage', 'tags.id', 'project.id', 'owners.id', 'owners.type', 'accountable.id', 'subscribers.id'])
+        .select(['task.id', 'task.name', 'task.stage', 'tags.id', 
+        'project.id', 'owners.id', 'owners.type', 'accountable.id', 
+        'subscribers.id'])
         .getMany(); 
     }
 
@@ -51,19 +54,25 @@ export class TasksService {
     
 
     async createTask(task: CreateTaskDto, project: Project): Promise<Task> {
-        const newTask =  await this.tasksRepository.save({
-            name: task.name,
-            stage: task.stage,
-            tags: task.tags,
-            owners: task.owners,
-            accountable: await this.filterAccountableUsers(task),
-            subscribers: await this.filterSubscribers(task)
-        });
-
-        project.tasks = [...project.tasks, newTask]
-        await project.save();
-
-        return newTask;
+        try {
+            const newTask =  await this.tasksRepository.save({
+                name: task.name,
+                stage: task.stage,
+                tags: task.tags,
+                owners: task.owners,
+                accountable: await this.filterAccountableUsers(task),
+                subscribers: await this.filterSubscribers(task)
+            });
+    
+            project.tasks = [...project.tasks, newTask]
+            await project.save();
+    
+            return newTask;  
+        } catch (error) {
+            throw new BadRequestException(
+                'IDs of tags, owners, accountable and subscribers should be of existing users.', error);
+        }
+       
     }
 
     async getTaskById(id: number): Promise<Task> {
@@ -75,16 +84,21 @@ export class TasksService {
         });
     }
 
-    async updateTask(updateTask: Task): Promise<Task> {
-        const taskId = updateTask.id;
-
-        if (!taskId) throw new BadRequestException();
+    async updateTask(updateTask: UpdateTaskDto): Promise<Task> {
         
-        const taskToUpdate = await this.getTaskById(taskId);
+        try {
+            const taskId = updateTask.id;
+            if (!taskId) throw new BadRequestException();
 
-        if (!taskToUpdate) throw new BadRequestException();
+            const taskToUpdate = await this.getTaskById(taskId);
+            if (!taskToUpdate) throw new BadRequestException();
 
-        const updated = Object.assign(taskToUpdate, updateTask);
-        return await this.tasksRepository.save(updated);
+            const updated = Object.assign(taskToUpdate, updateTask);
+            return await this.tasksRepository.save(updated);
+        } catch (error) {
+            throw new BadRequestException(
+                'IDs of tags, owners, accountable and subscribers should be of existing users.', error);
+        }
+        
     }
 }

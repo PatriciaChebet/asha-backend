@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Project } from "./projects.entity";
-import { User } from "src/modules/users/entities/user.entity";
+import { User } from "../../users/entities/user.entity";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 export enum Stage{
@@ -37,12 +37,11 @@ export class Task extends BaseEntity{
         default: Stage.BACKLOG
     })
     stage: Stage;
-
-   
+    
     @ManyToOne(() => Project, (project) => project.tasks)
     project: Project;
 
-   
+    @ApiPropertyOptional()
     @ManyToMany(type => User)
     @JoinTable({
     name: "tags", 
@@ -56,7 +55,7 @@ export class Task extends BaseEntity{
     }})
     tags: User[];
 
-    
+    @ApiPropertyOptional()
     @ManyToMany(type => User)
     @JoinTable({
     name: "owners", 
@@ -70,7 +69,7 @@ export class Task extends BaseEntity{
     }})
     owners: User[];
 
-    
+    @ApiPropertyOptional()
     @ManyToMany(type => User)
     @JoinTable({
     name: "accountable", 
@@ -84,7 +83,7 @@ export class Task extends BaseEntity{
     }})
     accountable: User[];
 
-    
+    @ApiPropertyOptional()
     @ManyToMany(type => User)
     @JoinTable({
     name: "subscribers", 

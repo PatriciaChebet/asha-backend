@@ -20,6 +20,5 @@ export const typeOrmConfigAsync: TypeOrmModuleAsyncOptions= {
     useFactory: async(configService: ConfigService): 
     Promise<TypeOrmModuleOptions> => TypeOrmConfig.getOrmConfig(configService),
     inject: [ConfigService]
-   
 }
 

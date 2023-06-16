@@ -29,7 +29,7 @@ export class Project extends BaseEntity{
     })
     description: string;
 
-    @ApiProperty()
+    @ApiPropertyOptional()
     @OneToMany(() => Task, (task) => task.project)
     tasks: Task[];
 

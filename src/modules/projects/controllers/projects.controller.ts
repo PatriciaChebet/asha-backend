@@ -4,6 +4,7 @@ import { CreateProjectDto } from '../dto/create-project.dto';
 import { Project } from '../entities/projects.entity';
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { type } from 'os';
+import { UpdateProjectDto } from '../dto/update-project.dto';
 
 @ApiTags('Projects')
 @Controller('projects')
@@ -11,7 +12,7 @@ export class ProjectsController {
   constructor(private projectsService: ProjectsService) {}
 
   @Get('/')
-  @ApiOperation({
+  @ApiOkResponse({
     description: "Retrieves all projects.",
   })
   @HttpCode(HttpStatus.OK)
@@ -43,7 +44,7 @@ export class ProjectsController {
     description: "Project could not be updated. Try again!"
   })
   @HttpCode(HttpStatus.OK)
-  async updateProject(@Body() updateDetails: Project) {
+  async updateProject(@Body() updateDetails: UpdateProjectDto) {
     return await this.projectsService.updateProject(updateDetails);
   }
  

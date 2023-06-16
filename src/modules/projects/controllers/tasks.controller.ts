@@ -4,6 +4,7 @@ import { TasksService } from "../services/tasks.service";
 import { Task } from "../entities/tasks.entity";
 import { ProjectsService } from "../services/projects.service";
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { UpdateTaskDto } from "../dto/update-task.dto";
 
 @ApiTags('Tasks')
 @Controller('tasks')
@@ -11,11 +12,11 @@ export class TasksController {
     constructor(private tasksService: TasksService, private projectsService: ProjectsService){}
 
     @Get('/')
-    @ApiOperation({
+    @ApiOkResponse({
         description: "Retrieves all Tasks.",
     })
     @HttpCode(HttpStatus.OK)
-    async getAllProjects(): Promise<Task[]> {
+    async getAllTasks(): Promise<Task[]> {
         return await this.tasksService.getAllTasks();
     }
 
@@ -43,7 +44,7 @@ export class TasksController {
         description: "Task could not be updated. Try again!"
     })
     @HttpCode(HttpStatus.OK)
-    async updateTask(@Body() updateTaskDetails: Task) {
+    async updateTask(@Body() updateTaskDetails: UpdateTaskDto) {
         return await this.tasksService.updateTask(updateTaskDetails);
     }
 
