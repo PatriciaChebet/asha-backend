@@ -10,7 +10,6 @@ export class UsersService {
 
     async findUserById(id: number): Promise<User>{
         return await this.usersRepository.findOne({
-            //relations: ['quiz', 'options'],
             where: {
                 id: id
             }

@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { ProjectsRepository } from "../repositories/projects.repository";
 import { CreateProjectDto } from "../dto/create-project.dto";
 import { Project } from "../entities/projects.entity";
+import { UpdateProjectDto } from "../dto/update-project.dto";
 
 @Injectable()
 export class ProjectsService{
@@ -28,17 +29,22 @@ export class ProjectsService{
         return await this.projectRepository.save(project);
     }
 
-    async updateProject(updateProject: Project): Promise<Project> {
-        const projectId = updateProject.id;
+    async updateProject(updateProject: UpdateProjectDto): Promise<Project> {
 
-        if (!projectId) throw new BadRequestException();
+        try {
+            const projectId = updateProject.id;
+            if (!projectId) throw new BadRequestException();
+
+            const projectToUpdate = await this.getProjectById(projectId);
+            if (!projectToUpdate) throw new BadRequestException();
+
+            const updated = Object.assign(projectToUpdate, updateProject);
+            return await this.projectRepository.save(updated);
+        } catch (error) {
+            throw new BadRequestException(
+                'IDs of tasks should be of existing tasks.', error);
+        }
         
-        const projectToUpdate = await this.getProjectById(projectId);
-
-        if (!projectToUpdate) throw new BadRequestException();
-
-        const updated = Object.assign(projectToUpdate, updateProject);
-        return await this.projectRepository.save(updated);
     }
 
 }

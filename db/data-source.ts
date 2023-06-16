@@ -2,8 +2,6 @@ import { DataSource, DataSourceOptions } from "typeorm";
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 
-const env: string | undefined = process.env.NODE_ENV;
-
 const data: any = dotenv.parse(fs.readFileSync('.env'));
 
 export const dataSourceOptions: DataSourceOptions = {
