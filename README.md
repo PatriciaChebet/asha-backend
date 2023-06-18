@@ -11,18 +11,21 @@ Project Management App
 ## Installation
 ### Local Setup
 ```bash
-- Clone the repository:
+# Clone the repository:
 $ git clone https://github.com/PatriciaChebet/asha-backend.git
-- Run the command below to install the dependencies:
+
+# Run the command below to install the dependencies:
 $ npm install
 ```
 
 ### Database Setup
 ```bash
-- Create a postgres database on your local machine 
-- Create a .env file on the root of the project folder
-- populate DB_PORT, DB_HOST, DB_USERNAME, DB_PASSWORD and DB_NAME variables
-- Run the migration named: SetupMigrations:
+# Create a postgres database on your local machine.
+
+# Create a .env file on the root directory of the project folder and
+# populate it with DB_PORT, DB_HOST, DB_USERNAME, DB_PASSWORD and DB_NAME variables.
+
+# Run the migration named: SetupMigrations:
 $ npm run migration:run
 ```
 
