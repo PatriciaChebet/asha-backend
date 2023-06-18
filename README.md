@@ -19,12 +19,13 @@ $ npm install
 ```
 
 ### Database Setup
+
+Create a postgres database on your local machine.
+
+Create a .env file on the root directory of the project folder and
+populate it with DB_PORT, DB_HOST, DB_USERNAME, DB_PASSWORD and DB_NAME variables.
+
 ```bash
-# Create a postgres database on your local machine.
-
-# Create a .env file on the root directory of the project folder and
-# populate it with DB_PORT, DB_HOST, DB_USERNAME, DB_PASSWORD and DB_NAME variables.
-
 # Run the migration named: SetupMigrations:
 $ npm run migration:run
 ```
